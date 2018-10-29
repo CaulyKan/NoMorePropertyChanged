@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NoMorePropertyChanged</id>
+    <version>1.0.0</version>
+    <title>NoMorePropertyChanged</title>
+    <authors>Cauly</authors>
+    <owners>Cauly</owners>
+    <projectUrl>https://github.com/CaulyKan/NoMorePropertyChanged</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Elimates the annoying PropertyChanged stuff from your ViewModel code.</description>
+    <releaseNotes>First working version.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>WPF INotifyPropertyChangednu</tags>
+  </metadata>
+</package>
