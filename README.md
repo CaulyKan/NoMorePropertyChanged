@@ -6,7 +6,7 @@ This project aims to elimate the annoying PropertyChanged stuff from your ViewMo
 
 There are two main issues with PropertyChanged system.
 
-1. A class must notify itself properties.
+1. A class must notify its own properties.
 
 Suppose you have a data class from ORM or a dto from wcf. These classes just won't support INotifyPropertyChanged. The recommanded MVVM way to show these data in your view is to define corresponding properties in your viewmodel. However, this is not only boring, but also hard to maintain. Using technologies like Castle DynamicProxy or PropertyChanged.Fody can cut off most of these code, but still you have to maintain its state yourself.
 
