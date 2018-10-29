@@ -16,12 +16,12 @@ namespace NoMorePropertyChanged
             var type = obj.GetType();
             foreach(var prop in type.GetProperties())
             {
-                var attribs = prop.GetCustomAttributes(typeof(DependsOnAtribute), true).Cast<DependsOnAtribute>().ToList();
+                var attribs = prop.GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>().ToList();
                 attribs.ForEach(attr => 
                 {
                     CreateBinding(obj, attr.BindingPath, prop.Name);
                 });
-                var attribs2 = prop.GetCustomAttributes(typeof(DependsOnCollectionAtribute), true).Cast<DependsOnCollectionAtribute>().ToList();
+                var attribs2 = prop.GetCustomAttributes(typeof(DependsOnCollectionAttribute), true).Cast<DependsOnCollectionAttribute>().ToList();
                 attribs2.ForEach(attr => 
                 {
                     CreateCollectionBinding(obj, attr.BindingPath, prop.Name);
@@ -101,19 +101,19 @@ namespace NoMorePropertyChanged
         }
     }
 
-    public class DependsOnAtribute : Attribute 
+    public class DependsOnAttribute : Attribute 
     {
         public string BindingPath{get;set;}
-        public DependsOnAtribute(params string[] BindingPath)
+        public DependsOnAttribute(params string[] BindingPath)
         {
             this.BindingPath = string.Join(".", BindingPath);
         }
     }
 
-    public class DependsOnCollectionAtribute : Attribute 
+    public class DependsOnCollectionAttribute : Attribute 
     {
         public string BindingPath{get;set;}
-        public DependsOnCollectionAtribute(params string[] BindingPath)
+        public DependsOnCollectionAttribute(params string[] BindingPath)
         {
             this.BindingPath = string.Join(".", BindingPath);
         }

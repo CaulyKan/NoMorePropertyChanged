@@ -207,13 +207,13 @@ namespace NoMorePropertyChanged
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             base.TryGetMember(binder, out result);
-            result = unproxifyObject(result);
+            result = proxifyObject(result);
             return true;
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            var obj = proxifyObject(value);
+            var obj = unproxifyObject(value);
             base.TrySetMember(binder, obj);
             OnPropertyChanged(binder.Name);
             return true;
