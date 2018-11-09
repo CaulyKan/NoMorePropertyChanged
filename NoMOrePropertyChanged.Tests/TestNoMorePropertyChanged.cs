@@ -161,6 +161,11 @@ namespace NoMorePropertyChanged.Tests
             TestVM.Test5Binding[0] = "Test5_modify";
             Assert.IsTrue(notified);
             Assert.AreEqual(TestVM.Test5[0], "Test5_modify");
+
+            notified = false;
+            TestVM.Test5Binding[0] = 123;
+            Assert.IsTrue(notified);
+            Assert.AreEqual(TestVM.Test5[0], "123");
         }
 
     }

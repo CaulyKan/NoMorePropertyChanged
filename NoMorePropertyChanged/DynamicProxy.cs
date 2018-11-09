@@ -151,7 +151,7 @@ namespace NoMorePropertyChanged
                 for (int i = 0; i < indexes.Length; i++)
                     convertedIndexes.Add(convertTo(indexes[i], indexTypes[i]));
 
-                prop.SetValue(this.obj, value, convertedIndexes.ToArray());
+                prop.SetValue(this.obj, convertTo(value, prop.PropertyType), convertedIndexes.ToArray());
 
                 return true;
             }
