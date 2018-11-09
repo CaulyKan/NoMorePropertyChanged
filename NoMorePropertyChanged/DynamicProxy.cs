@@ -135,6 +135,28 @@ namespace NoMorePropertyChanged
             }
         }
 
+        public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+        {
+            var prop = this.type.GetProperty("Item");
+            if (prop == null || !prop.CanWrite)
+                throw new InvalidCastException();
+            else if (this.obj == null)
+                throw new NullReferenceException();
+            else
+            {
+                var indexTypes = prop.GetIndexParameters().Select(i => i.ParameterType).ToArray();
+                if (indexes.Length != indexTypes.Length) throw new InvalidCastException();
+
+                var convertedIndexes = new List<object>();
+                for (int i = 0; i < indexes.Length; i++)
+                    convertedIndexes.Add(convertTo(indexes[i], indexTypes[i]));
+
+                prop.SetValue(this.obj, value, convertedIndexes.ToArray());
+
+                return true;
+            }
+        }
+
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             var prop = this.type.GetProperty(binder.Name);
@@ -204,6 +226,11 @@ namespace NoMorePropertyChanged
             return true;
         }
 
+        public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+        {
+            return base.TrySetIndex(binder, indexes, unproxifyObject(value));
+        }
+
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             base.TryGetMember(binder, out result);
@@ -243,7 +270,7 @@ namespace NoMorePropertyChanged
             return false;
         }
 
-        private object proxifyObject(object obj)
+        protected object proxifyObject(object obj)
         {
             object result = null;
             if (obj == null) return null;
@@ -257,7 +284,7 @@ namespace NoMorePropertyChanged
             }
         }
         
-        private object unproxifyObject(object obj)
+        protected object unproxifyObject(object obj)
         {
             if (obj == null) return null;
             else if (typeof(NotifyProxy).IsAssignableFrom(obj.GetType())) return (obj as NotifyProxy).GetObject();
@@ -268,6 +295,26 @@ namespace NoMorePropertyChanged
     public class NotifyCollectionProxy : NotifyProxy, INotifyCollectionChanged, IEnumerable
     {
         public NotifyCollectionProxy(object obj) : base (obj) {}
+
+        public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+        {
+            var result = base.TrySetIndex(binder, indexes, value);
+            var index = (int)indexes[0];
+
+            var i = 0;
+            object origin = null;
+            foreach (var item in this.GetObject() as IEnumerable)
+            {
+                if (i == index) origin = item;
+                i++;
+            }
+
+            if (result)
+            {
+                this.OnCollectionChanged(NotifyCollectionChangedAction.Replace, value, origin, index);
+            }
+            return result;
+        }
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {

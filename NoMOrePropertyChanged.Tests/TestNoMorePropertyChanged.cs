@@ -14,6 +14,7 @@ namespace NoMorePropertyChanged.Tests
         {
             TestVM = new TestViewModel();
             TestVM.Test1 = new TestDTO();
+            TestVM.Test5 = new List<string>();
         }
 
         [TestMethod]
@@ -146,5 +147,21 @@ namespace NoMorePropertyChanged.Tests
             Assert.IsTrue(notified);
             Assert.AreEqual(TestVM.Test4, "Test4");
         }
+
+        [TestMethod]
+        public void Test5_TestList()
+        {
+            var notified = false;
+            PropertyChangeDependency.MonitorCollectionChanged(TestVM, "Test5Binding", (Action)(() => notified = true));
+            TestVM.Test5Binding.Add("Test5");
+            Assert.IsTrue(notified);
+            Assert.AreEqual(TestVM.Test5[0], "Test5");
+
+            notified = false;
+            TestVM.Test5Binding[0] = "Test5_modify";
+            Assert.IsTrue(notified);
+            Assert.AreEqual(TestVM.Test5[0], "Test5_modify");
+        }
+
     }
 }

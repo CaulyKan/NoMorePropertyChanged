@@ -25,13 +25,20 @@ namespace NoMorePropertyChanged.Tests
         [DependsOnCollection(nameof(Test1Binding), nameof(TestDTO.TestList))]
         public string Test3
         {
-            get { return string.Join(",", Test1.TestList); }
+            get { return Test1 == null? "": string.Join(",", Test1.TestList); }
         }
 
         [DependsOn(nameof(Test3))]
         public string Test4
         {
             get { return Test3; }
+        }
+
+        public dynamic Test5Binding { get; set; }
+        public List<string> Test5
+        {
+            get { return (List<string>) Test5Binding; }
+            set { SetBinding(nameof(Test5Binding), value); }
         }
     }
 }
